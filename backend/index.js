@@ -1,5 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 const dotenv = require("dotenv");
+const express = require("express");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -8,7 +10,19 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-async function apiCall() {
+const app = express();
+
+let corsOptions = {
+  origin: "",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get("/fortuneTell", async function (req, res) {
   const chatCompletion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     // max_tokens: 100,
@@ -18,8 +32,9 @@ async function apiCall() {
       { role: "user", content: "Hello world" },
     ],
   });
+  let fortune = chatCompletion.data.choices[0].message["content"];
+  console.log(fortune);
+  res.send(fortune);
+});
 
-  console.log(chatCompletion.data.choices[0].text);
-}
-
-apiCall();
+app.listen(3000);

@@ -13,7 +13,7 @@ const openai = new OpenAIApi(configuration);
 const app = express();
 
 let corsOptions = {
-  origin: "",
+  origin: "*",
   credentials: true,
 };
 
@@ -22,7 +22,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/fortuneTell", async function (req, res) {
+app.post("/fortuneTell", async function (req, res) {
   const chatCompletion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     // max_tokens: 100,
@@ -34,7 +34,7 @@ app.get("/fortuneTell", async function (req, res) {
   });
   let fortune = chatCompletion.data.choices[0].message["content"];
   console.log(fortune);
-  res.send(fortune);
+  res.json({ assistant: fortune });
 });
 
 app.listen(3000);

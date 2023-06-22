@@ -28,8 +28,8 @@ app.post("/fortuneTell", async function (req, res) {
     // max_tokens: 100,
     // temperature: 0.5,
     messages: [
-      { role: "system", content: "Hello world" },
-      { role: "user", content: "Hello world" },
+      { role: "system", content: "당신은 세계최고의 점성술사입니다." },
+      { role: "user", content: req.body.message },
     ],
   });
   let fortune = chatCompletion.data.choices[0].message["content"];
